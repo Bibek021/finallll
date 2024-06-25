@@ -1,0 +1,91 @@
+/* Styles for the LoginSignup component */
+.loginsignup {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f7f7f7;
+  }
+  
+  .loginsignup-container {
+    background-color: #fff;
+    padding: 40px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+  }
+  
+  .loginsignup-container h1 {
+    margin-bottom: 24px;
+    font-size: 24px;
+    color: #333;
+  }
+  
+  .loginsignup-fields {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .loginsignup-fields input {
+    margin-bottom: 16px;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+  }
+  
+  .loginsignup-fields input::placeholder {
+    color: #aaa;
+  }
+  
+  button {
+    background-color: #28a745; /* Green color for the button */
+    color: #fff;
+    padding: 12px;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  button:hover {
+    background-color: #218838; /* Darker green on hover */
+  }
+  
+  .loginsignup-login {
+    margin-top: 16px;
+    font-size: 14px;
+    color: #555;
+  }
+  
+  .loginsignup-login span {
+    color: #007bff;
+    cursor: pointer;
+  }
+  
+  .loginsignup-login span:hover {
+    text-decoration: underline;
+  }
+  
+  .loginsignup-agree {
+    display: flex;
+    align-items: flex-start; /* Align items at the start for better alignment */
+    margin-top: 16px;
+    font-size: 14px;
+    color: #555;
+    text-align: left;
+  }
+  
+  .loginsignup-agree input {
+    margin-right: 8px;
+    margin-top: 3px; /* Adjust for better vertical alignment */
+  }
+  
+  .loginsignup-agree label {
+    margin: 0;
+    line-height: 1.4; /* Adjust line-height for better readability */
+  }
+  

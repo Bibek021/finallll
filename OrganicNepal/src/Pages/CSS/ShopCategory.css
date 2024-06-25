@@ -1,0 +1,93 @@
+/* CSS for ShopCategory component */
+
+/* CSS for ShopCategory component */
+
+.shop-category {
+  padding: 20px;
+  background-color: #f5f5f5;
+}
+
+.shop-category img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+}
+
+.shopcategory-indexSort {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.shopcategory-indexSort p {
+  margin: 0;
+  font-size: 16px;
+}
+
+.shopcategory-sort {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.shopcategory-sort img {
+  width: 16px; /* Adjust the width as needed */
+  height: auto;
+  margin-left: 5px; /* Adjust the margin as needed */
+}
+
+.shopcategory-products {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.shopcategory-products .item {
+  flex: 1 1 calc(33.333% - 20px); /* 3 items per row, with a gap */
+  box-sizing: border-box;
+  background-color: #fff;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  transition: transform 0.3s;
+}
+
+.shopcategory-products .item:hover {
+  transform: scale(1.05);
+}
+
+.shopcategory-products .item img {
+  width: 100%;
+  height: auto;
+  border-bottom: 1px solid #ddd;
+  margin-bottom: 10px;
+}
+
+.shopcategory-products .item .item-details {
+  text-align: center;
+}
+
+.shopcategory-products .item .item-name {
+  font-size: 18px;
+  font-weight: bold;
+  margin: 10px 0;
+}
+
+.shopcategory-products .item .item-price {
+  font-size: 16px;
+  color: #333;
+}
+
+.shopcategory-products .item .item-price .new-price {
+  color: #e74c3c;
+}
+
+.shopcategory-products .item .item-price .old-price {
+  text-decoration: line-through;
+  margin-left: 10px;
+  color: #999;
+}
+
