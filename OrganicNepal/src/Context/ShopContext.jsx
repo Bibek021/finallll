@@ -9,24 +9,27 @@ const ShopContextProvider = (props) => {
     const [cartItems, setCartItems] = useState({});
 
     useEffect(() => {
-        fetch('http://localhost:4000/allproducts')
-            .then((response) => response.json())
-            .then((data) => {
-                setAll_Product(data);
-                setCartItems(getDefaultCart(data));
-            });
-            if(localStorage.getItem('auth-token')){
-                fetch('http://localhost:4000/getcart',{
-                    method:'POST',
-                    headers:{
-                        Accept:'application/form-data',
-                        'auth-token':`${localStorage.getItem('auth-token')}`,
-                        'content-Type':'application/json',
+        const fetchProducts = async () => {
+            const response = await fetch('http://localhost:4000/allproducts');
+            const data = await response.json();
+            setAll_Product(data);
+            setCartItems(getDefaultCart(data));
+
+            if (localStorage.getItem('auth-token')) {
+                const cartResponse = await fetch('http://localhost:4000/getcart', {
+                    method: 'POST',
+                    headers: {
+                        Accept: 'application/json',
+                        'auth-token': `${localStorage.getItem('auth-token')}`,
+                        'Content-Type': 'application/json',
                     },
-                    body:"",
-                }).then((response)=>response.json())
-                .then((data)=>setCartItems(data));
+                    body: null,
+                });
+                const cartData = await cartResponse.json();
+                setCartItems(cartData);
             }
+        };
+        fetchProducts();
     }, []);
 
     // Function to initialize cart with default values
@@ -39,13 +42,14 @@ const ShopContextProvider = (props) => {
     }
 
     // Function to add an item to the cart
-    const addToCart = (itemId) => {
+    const addToCart = async (itemId) => {
         setCartItems(prev => ({
             ...prev,
             [itemId]: prev[itemId] + 1 // Increment item quantity in cart
         }));
+
         if (localStorage.getItem('auth-token')) {
-            fetch('http://localhost:4000/addtocart', {
+            const response = await fetch('http://localhost:4000/addtocart', {
                 method: 'POST',
                 headers: {
                     Accept: 'application/json',
@@ -53,21 +57,22 @@ const ShopContextProvider = (props) => {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({ "itemId": itemId })
-            })
-                .then((response) => response.json())
-                .then((data) => console.log(data));
+            });
+            const data = await response.json();
+            console.log(data);
         }
     };
 
     // Function to remove an item from the cart
-    const removeFromCart = (itemId) => {
+    const removeFromCart = async (itemId) => {
         if (cartItems[itemId] > 0) {
             setCartItems(prev => ({
                 ...prev,
                 [itemId]: prev[itemId] - 1 // Decrement item quantity in cart (if > 0)
             }));
-            if(localStorage.getItem('auth-token')){
-                fetch('http://localhost:4000/removefromcart', {
+
+            if (localStorage.getItem('auth-token')) {
+                const response = await fetch('http://localhost:4000/removefromcart', {
                     method: 'POST',
                     headers: {
                         Accept: 'application/json',
@@ -75,9 +80,9 @@ const ShopContextProvider = (props) => {
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({ "itemId": itemId })
-                })
-                    .then((response) => response.json())
-                    .then((data) => console.log(data));
+                });
+                const data = await response.json();
+                console.log(data);
             }
         }
     };
