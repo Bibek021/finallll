@@ -1,0 +1,109 @@
+.productdisplay {
+  display: flex;
+  gap: 20px;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.productdisplay-left {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center items vertically */
+  gap: 10px;
+}
+
+.productdisplay-img {
+  display: flex;
+  justify-content: center;
+}
+
+.productdisplay-img img {
+  max-width: 300px; /* Adjusted max-width */
+  max-height: 300px; /* Adjusted max-height */
+  object-fit: cover;
+  border-radius: 10px;
+  border: 2px solid #eee;
+}
+
+.productdisplay-img-list {
+  display: flex;
+  gap: 10px;
+}
+
+.productdisplay-img-list img {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border: 2px solid #eee;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: border-color 0.3s;
+}
+
+.productdisplay-img-list img:hover {
+  border-color: #007bff;
+}
+
+.productdisplay-right {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* Center content vertically */
+  align-items: center; /* Center content horizontally */
+}
+
+.productdisplay-right h1 {
+  font-size: 2em;
+  color: #333;
+  text-align: center;
+  margin: 10px 0;
+}
+
+.productdisplay-right-star {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  text-align: center;
+}
+
+.productdisplay-right-star img {
+  width: 24px; /* Adjusted width */
+  height: 24px; /* Adjusted height */
+}
+
+.productdisplay-right p {
+  text-align: center;
+  margin: 5px 0;
+  font-size: 1em;
+  color: #666;
+}
+
+.productdisplay-right-description {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #555;
+}
+
+.productdisplay-right-quantity {
+  text-align: center;
+}
+
+button {
+  padding: 10px 20px;
+  font-size: 1.2em;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+.productdisplay-right-price-old{
+    color: #818181;
+    text-decoration: line-through;
+}

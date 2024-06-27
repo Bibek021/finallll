@@ -1,0 +1,51 @@
+/* DescriptionBox.css */
+
+.descriptionbox {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    background-color: #fff;
+    max-width: 600px;
+    margin: 20px auto;
+    font-family: Arial, sans-serif;
+  }
+  
+  .descriptionbox-navigator {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 10px;
+  }
+  
+  .descriptionbox-nav-box {
+    padding: 10px 15px;
+    cursor: pointer;
+    font-weight: bold;
+    color: #333;
+    border-radius: 4px;
+  }
+  
+  .descriptionbox-nav-box:hover {
+    background-color: #f0f0f0;
+  }
+  
+  .descriptionbox-nav-box.active {
+    background-color: #007bff;
+    color: #fff;
+  }
+  
+  .descriptionbox-nav-box.fade {
+    color: #888;
+  }
+  
+  .descriptionbox-description {
+    margin-top: 15px;
+    color: #555;
+  }
+  
+  .descriptionbox-description p {
+    line-height: 1.6;
+    margin-bottom: 10px;
+  }
+  

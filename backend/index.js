@@ -174,6 +174,65 @@ app.post('/login', async (req, res) => {
   }
 });
 
+//creating endpont for new collection data
+app.get('/newcollections',async (req,res)=>{
+  let products = await Product.find({});
+  let newcollection = products.slice(1).slice(-8);
+  console.log("NewCollection Fetched");
+  res.send(newcollection);
+})
+
+//creating endpoint for popular with us
+app.get('/popularwithus',async (req,res)=>{
+  let products = await Product.find({category:"terai"});
+  let popular_with_us = products.slice(0,4);
+  console.log("Popular with us Fetched");
+  res.send(popular_with_us);
+})
+
+//creating middelware to fetch user
+const fetchUser = async (req,res,next)=>{
+  const token = req.header('auth-token');
+  if(!token) {
+    res.status(401).send({errors:"Please authenticate using valid token"})
+  }
+  else{
+    try {
+      const data = jwt.verify(token,'secret_ecom');
+      req.user = data.user;
+      next();
+    } catch (error) {
+      res.status(401).send({errors:"please authenticate using a valid token"})
+    }
+  }
+}
+
+//creating endpont for adding products in cart data
+app.post('/addtocart',fetchUser,async (req,res)=>{
+  console.log("Added",req.body.itemId);
+     let userData = await User.findOne({_id:req.user.id});
+     userData.cartData[req.body.itemId] += 1;
+     await User.findOneAndUpdate({_id:req.user.id},{cartData:userData.cartData});
+     res.send("Added")
+})
+
+//creating endpont to remove product from cartdata
+app.post('/removefromcart',fetchUser,async (req,res)=>{
+   console.log("removed",req.body.itemId);
+  let userData = await User.findOne({_id:req.user.id});
+  if(userData.cartData[req.body.itemId]>0)
+  userData.cartData[req.body.itemId] -= 1;
+  await User.findOneAndUpdate({_id:req.user.id},{cartData:userData.cartData});
+  res.send("Removed")
+})
+
+//creating endponit to get cartdata
+app.post('/getcart',fetchUser,async (req,res)=>{
+  console.log("GetCart");
+  let userData = await User.findOne({_id:req.user.id});
+  res.json(userData.cartData);
+}) 
+
 app.listen(port, (error) => {
   if (!error) {
     console.log("Server Running on port " + port);

@@ -1,10 +1,17 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import './MedicinalHerbs.css'
-import medicinal_herbs from  '../Assets/medicinal_herbs/medicinal_herbs'
+
 import Item from '../Item/Item';
 
 
 const MedicinalHerbs = () => {
+  const [medicinal_herbs,setNew_collection] = useState([]);
+
+  useEffect(()=>{
+     fetch('http://localhost:4000/newcollections')
+     .then((response)=>response.json())
+     .then((data)=>setNew_collection(data));
+  },[])
   return (
     <div className='medicinal-herbs'>
         <h1>MEDICINAL HERBS</h1>
