@@ -1,50 +1,59 @@
-.navbar{
+/* Base styles */
+.navbar {
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
+    align-items: center;
     padding: 16px;
     box-shadow: 0 1px 3px -2px black;
+    position: relative;
+    z-index: 10;
+    background-color: white;
 }
-.nav-logo{
+
+.nav-logo {
     display: flex;
     align-items: center;
     gap: 10px;
 }
-.nav-logo p{
+
+.nav-logo p {
     color: #171717;
     font-size: 38px;
     font-weight: 600;
 }
-.nav-menu{
-    display: flex;
-    align-items: center;
+
+.nav-menu {
     list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
     gap: 50px;
     color: #626262;
     font-size: 20px;
     font-weight: 500;
+    transition: all 0.3s ease-in-out;
 }
 
-.nav-menu li{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 3px;
+.nav-menu li {
+    position: relative; /* Needed for dropdown positioning */
     cursor: pointer;
 }
-.nav-menu hr{
+
+.nav-menu hr {
     border: none;
     width: 80%;
     height: 3px;
     border-radius: 10px;
     background: green;
 }
-.nav-login-cart{
+
+.nav-login-cart {
     display: flex;
     align-items: center;
     gap: 45px;
 }
-.nav-login-cart button{
+
+.nav-login-cart button {
     width: 157px;
     height: 58px;
     outline: none;
@@ -56,10 +65,12 @@
     background: white;
     cursor: pointer;
 }
-.nav-login-cart button:active{
+
+.nav-login-cart button:active {
     background: #f3f3f3;
 }
-.nav-cart-count{
+
+.nav-cart-count {
     width: 22px;
     height: 22px;
     display: flex;
@@ -71,4 +82,76 @@
     font-size: 14px;
     background: red;
     color: white;
+}
+
+.nav-dropdown {
+    display: none; /* Initially hide dropdown on bigger screens */
+    cursor: pointer;
+    width: 30px; /* Set width as needed */
+    height: auto; /* Adjust height automatically */
+}
+
+/* Media queries */
+@media (max-width: 800px) {
+    .nav-menu {
+        display: none; /* Hide main menu on smaller screens by default */
+        flex-direction: column;
+        position: absolute;
+        top: 70px;
+        left: 0;
+        width: 100%;
+        background: white;
+        box-shadow: 0 1px 3px -2px black;
+    }
+
+    .nav-menu-visible {
+        display: flex; /* Show menu when .nav-menu-visible is applied */
+    }
+
+    .nav-dropdown {
+        display: block; /* Show dropdown on smaller screens */
+    }
+
+    .nav-dropdown img {
+        width: 100%; /* Ensure dropdown icon fits within its container */
+        height: auto;
+    }
+
+    .nav-login-cart {
+        gap: 20px;
+    }
+
+    .nav-login-cart button {
+        width: 100px;
+        height: 40px;
+        font-size: 14px;
+    }
+
+    .nav-cart-count {
+        margin-top: -20px;
+        margin-left: -30px;
+        font-size: 10px;
+    }
+}
+
+@media (max-width: 500px) {
+    .nav-logo p {
+        font-size: 24px;
+    }
+
+    .nav-login-cart {
+        gap: 10px;
+    }
+
+    .nav-login-cart button {
+        width: 80px;
+        height: 35px;
+        font-size: 12px;
+    }
+
+    .nav-cart-count {
+        margin-top: -15px;
+        margin-left: -25px;
+        font-size: 8px;
+    }
 }

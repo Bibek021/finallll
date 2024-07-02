@@ -1,13 +1,20 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useRef } from 'react';
 import './Navbar.css';
 import logo from '../Assets/logo.png';
 import cart_icon from '../Assets/cart icon.png';
+import nav_dropdown from '../Assets/nav_dropdown.png'; // Import your dropdown icon here
 import { Link } from 'react-router-dom';
 import { ShopContext } from '../../Context/ShopContext';
 
 const Navbar = () => {
     const [menu, setMenu] = useState("shop");
     const { getTotalCartItems } = useContext(ShopContext);
+    const menuRef = useRef(null); // Initialize menuRef
+
+    const dropdownToggle = (e) => {
+        menuRef.current.classList.toggle('nav-menu-visible');
+        e.target.classList.toggle('open');
+    };
 
     return (
         <div className='navbar'>
@@ -15,7 +22,8 @@ const Navbar = () => {
                 <img src={logo} height={100} width={100} alt="" />
                 <p>OrganicNepal</p>
             </div>
-            <ul className="nav-menu">
+            <img className="nav-dropdown" onClick={dropdownToggle} src={nav_dropdown} alt="Menu" />
+            <ul ref={menuRef} className="nav-menu">
                 <li onClick={() => { setMenu("shop") }}>
                     <Link style={{ textDecoration: 'none' }} to='/'>Shop</Link>
                     {menu === "shop" ? <hr /> : <></>}
@@ -34,9 +42,9 @@ const Navbar = () => {
                 </li>
             </ul>
             <div className="nav-login-cart">
-            {localStorage.getItem('auth-token')
-          ?<button onClick={()=>{localStorage.removeItem('auth-token');window.location.replace('/')}}>Logout</button>
-        :<Link to='/login'><button>Login</button></Link> }
+                {localStorage.getItem('auth-token')
+                    ? <button onClick={() => { localStorage.removeItem('auth-token'); window.location.replace('/') }}>Logout</button>
+                    : <Link to='/login'><button>Login</button></Link>}
                 <Link to='/cart'><img src={cart_icon} height={60} width={60} alt="" /></Link>
                 <div className="nav-cart-count">{getTotalCartItems()}</div>
             </div>
