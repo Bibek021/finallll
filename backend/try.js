@@ -125,7 +125,8 @@ app.post('/removeproduct', async (req, res) => {
 // Endpoint to get all products
 app.get('/allproducts', async (req, res) => {
   const products = await Product.find({});
-  res.send(products);
+  res.send(products)
+
 });
 
 // Schema for creating users
@@ -187,7 +188,8 @@ app.post('/login', async (req, res) => {
     const passCompare = await bcrypt.compare(req.body.password, user.password);
     if (passCompare) {
       const token = jwt.sign({ user: { id: user.id } }, 'secret_ecom');
-      res.json({ success: true, token });
+      res.json({ success: true, token:token, id:user.id });
+   
     } else {
       res.status(401).json({ success: false, error: "Wrong Password" });
     }
@@ -202,6 +204,7 @@ app.get('/newcollections', async (req, res) => {
   let newCollection = products.slice(1).slice(-8); // Get the last 8 products
   console.log("NewCollection Fetched");
   res.send(newCollection);
+
 })
 
 // Endpoint to get popular products
@@ -210,6 +213,7 @@ app.get('/popularwithus', async (req, res) => {
   let popular_with_us = products.slice(0, 4); // Get the first 4 products
   console.log("Popular with us Fetched");
   res.send(popular_with_us);
+
 })
 
 // Middleware to fetch user from JWT token
@@ -232,24 +236,24 @@ const fetchUser = async (req, res, next) => {
 app.post('/addtocart', fetchUser, async (req, res) => {
   console.log("Added", req.body.itemId);
   try {
-      let userData = await User.findOne({ _id: req.user.id });
-      let product = await Product.findOne({ id: req.body.itemId });
+    let userData = await User.findOne({ _id: req.user.id });
+    let product = await Product.findOne({ id: req.body.itemId });
 
-      if (product && product.quantity > 0) {
-          userData.cartData[req.body.itemId] = (userData.cartData[req.body.itemId] || 0) + 1;
+    if (product && product.quantity > 0) {
+      userData.cartData[req.body.itemId] = (userData.cartData[req.body.itemId] || 0) + 1;
 
-          // Decrease the quantity in the product database
-          product.quantity -= 1;
-          await product.save();
+      // Decrease the quantity in the product database
+      product.quantity -= 1;
+      await product.save();
 
-          await User.findOneAndUpdate({ _id: req.user.id }, { cartData: userData.cartData });
-          res.json({ message: "Added" }); // Sending JSON response
-      } else {
-          res.status(400).json({ error: "Product out of stock" }); // Sending JSON response with error
-      }
+      await User.findOneAndUpdate({ _id: req.user.id }, { cartData: userData.cartData });
+      res.json({ message: "Added" }); // Sending JSON response
+    } else {
+      res.status(400).json({ error: "Product out of stock" }); // Sending JSON response with error
+    }
   } catch (error) {
-      console.error("Error adding to cart:", error);
-      res.status(500).json({ error: "Internal Server Error" }); // Sending JSON response with error
+    console.error("Error adding to cart:", error);
+    res.status(500).json({ error: "Internal Server Error" }); // Sending JSON response with error
   }
 });
 
@@ -258,13 +262,40 @@ app.post('/addtocart', fetchUser, async (req, res) => {
 
 // Endpoint to remove product from cart
 app.post('/removefromcart', fetchUser, async (req, res) => {
-  console.log("Removed", req.body.itemId);
-  let userData = await User.findOne({ _id: req.user.id });
-  if (userData.cartData[req.body.itemId] > 0)
-    userData.cartData[req.body.itemId] -= 1;
-  await User.findOneAndUpdate({ _id: req.user.id }, { cartData: userData.cartData });
-  res.send("Removed");
-})
+  console.log("Request body:", req.body);
+
+  try {
+      let userData = await User.findOne({ _id: req.user.id });
+      console.log("User data:", userData);
+
+      let product = await Product.findOne({ id: req.body.itemId });
+      console.log("Product before update:", product);
+
+      if (!userData || !product) {
+          return res.status(404).send("User or Product not found");
+      }
+
+      if (userData.cartData[req.body.itemId] > 0) {
+          userData.cartData[req.body.itemId] -= 1;
+          product.quantity += 1;
+
+          console.log("Current quantity before update:", product.quantity);
+          await product.save();
+          console.log("New quantity after update:", product.quantity);
+
+          await User.findOneAndUpdate({ _id: req.user.id }, { cartData: userData.cartData });
+          res.status(200).send("Removed");
+      } else {
+          res.status(400).send("Item not found in cart");
+      }
+  } catch (error) {
+      console.error("Error removing from cart:", error);
+      res.status(500).send("Internal Server Error");
+  }
+});
+
+
+
 
 // Endpoint to get cart data
 app.post('/getcart', fetchUser, async (req, res) => {
@@ -272,6 +303,59 @@ app.post('/getcart', fetchUser, async (req, res) => {
   let userData = await User.findOne({ _id: req.user.id });
   res.json(userData.cartData);
 })
+
+// Schema for creating Payment model
+const Payment = mongoose.model('Payment', {
+  transactionUuid: {
+    type: String,
+    required: true,
+  },
+  amount: {
+    type: String,
+    required: true,
+  },
+  userId: {
+    type: String,
+    required: true,
+  }
+});
+
+
+
+app.post("/payment-success", async (req, res) => {
+  const { amount, transactionUuid, userId } = req.body;
+
+  try {
+    // Create a new Payment instance
+    const newPayment = new Payment({
+      transactionUuid: transactionUuid,
+      amount: amount, // Ensure the amount is a number
+      userId: userId,
+    });
+
+    // Save the new Payment instance to the database
+    await newPayment.save();
+
+    console.log('Payment saved:', newPayment);
+
+    // Find the user by userId and clear their cartData
+    const user = await User.findById(userId);
+    if (user) {
+      user.cartData = {}; // Clear the cart data
+      await user.save();
+      console.log('User cart data cleared:', user);
+    } else {
+      console.warn('User not found with ID:', userId);
+    }
+
+    // Send a success response
+    res.json({ success: true, payment: newPayment });
+  } catch (error) {
+    console.error('Error saving payment or clearing user cart data:', error);
+    res.status(500).json({ success: false, message: 'Internal server error' });
+  }
+});
+
 
 // Start the server
 app.listen(port, (error) => {

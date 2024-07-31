@@ -8,6 +8,8 @@ import Product from './Pages/Product';
 import Cart from './Pages/Cart';
 import LoginSignup from './Pages/LoginSignup';
 import Footer from './Components/Footer/Footer';
+import PaymentSuccess from './Pages/PaymentSuccess';
+import PaymentFailure from './Pages/PaymentFailure';
 import mountain_banner from './Components/Assets/mountainbanner.jpg'
 import hill_banner from './Components/Assets/hillsbanner.jpg'
 import terai_banner from './Components/Assets/teraibanner.webp'
@@ -28,6 +30,9 @@ function App() {
         </Route>
         <Route path='/cart' element={<Cart/>}/>
         <Route path='/login' element={<LoginSignup/>}/>
+        <Route path='/payment-success' element={<PaymentSuccess/>}/>
+        <Route path='/payment-failure' element={<PaymentFailure/>}/>
+
        </Routes>
        <Footer/>
      

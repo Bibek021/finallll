@@ -50,10 +50,13 @@ const LoginSignup = () => {
       });
 
       const responseData = await response.json();
-
+   
+     
+     
       if (responseData.success) {
         localStorage.setItem('auth-token', responseData.token);
-        window.location.replace("/productlist");
+        localStorage.setItem('user-id',responseData.id)
+        window.location.replace("/");
       } else {
         setError(responseData.error || 'User doesnot exist, Please sign in...');
       }
