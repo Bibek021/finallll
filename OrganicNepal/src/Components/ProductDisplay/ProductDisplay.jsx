@@ -34,7 +34,8 @@ const ProductDisplay = ({ product }) => {
           <div className="productdisplay-right-price-new">New Price: perkg/{product.new_price}</div>
         </div>
         <div className="productdisplay-right-description">
-          100% Organic product. It is very good for health. Increase your living time.
+          {/* 100% Organic product. It is very good for health. Increase your living time. */}
+          {product.description}
         </div>
         <div className="productdisplay-right-quantity">
           <h1>Minimum order starts from 1kg</h1>

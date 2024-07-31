@@ -62,6 +62,10 @@ const Product = mongoose.model("Product", {
     type: String,
     required: true,
   },
+  description: {
+    type: String,
+    required: true,
+  },
   new_price: {
     type: Number,
     required: true,
@@ -96,6 +100,7 @@ app.post('/addproduct', async (req, res) => {
     new_price: req.body.new_price,
     old_price: req.body.old_price,
     quantity: req.body.quantity,
+    description: req.body.description,
   });
 
   await product.save();
