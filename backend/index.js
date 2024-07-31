@@ -125,8 +125,7 @@ app.post('/removeproduct', async (req, res) => {
 // Endpoint to get all products
 app.get('/allproducts', async (req, res) => {
   const products = await Product.find({});
-  res.send(products)
-
+  res.send(products);
 });
 
 // Schema for creating users
@@ -145,7 +144,8 @@ const User = mongoose.model('User', {
     required: true,
   },
   cartData: {
-    type: Object,
+    type: [Number], // Use an array for cart data
+    default: () => Array(300).fill(0), // Initialize with 300 items, all set to 0
   },
   date: {
     type: Date,
@@ -164,14 +164,10 @@ app.post('/signup', async (req, res) => {
   const salt = await bcrypt.genSalt(10);
   const hashedPassword = await bcrypt.hash(req.body.password, salt);
 
-  // Initialize cart with default values
-  const cart = Array.from({ length: 300 }, () => 0);
-
   const user = new User({
     name: req.body.username,
     email: req.body.email,
     password: hashedPassword,
-    cartData: cart,
   });
 
   await user.save();
@@ -188,8 +184,7 @@ app.post('/login', async (req, res) => {
     const passCompare = await bcrypt.compare(req.body.password, user.password);
     if (passCompare) {
       const token = jwt.sign({ user: { id: user.id } }, 'secret_ecom');
-      res.json({ success: true, token:token, id:user.id });
-   
+      res.json({ success: true, token: token, id: user.id });
     } else {
       res.status(401).json({ success: false, error: "Wrong Password" });
     }
@@ -202,18 +197,14 @@ app.post('/login', async (req, res) => {
 app.get('/newcollections', async (req, res) => {
   let products = await Product.find({});
   let newCollection = products.slice(1).slice(-8); // Get the last 8 products
-  console.log("NewCollection Fetched");
   res.send(newCollection);
-
 })
 
 // Endpoint to get popular products
 app.get('/popularwithus', async (req, res) => {
   let products = await Product.find({ category: "terai" });
   let popular_with_us = products.slice(0, 4); // Get the first 4 products
-  console.log("Popular with us Fetched");
   res.send(popular_with_us);
-
 })
 
 // Middleware to fetch user from JWT token
@@ -232,9 +223,7 @@ const fetchUser = async (req, res, next) => {
 }
 
 // Endpoint to add product to cart
-// Endpoint to add product to cart
 app.post('/addtocart', fetchUser, async (req, res) => {
-  console.log("Added", req.body.itemId);
   try {
     let userData = await User.findOne({ _id: req.user.id });
     let product = await Product.findOne({ id: req.body.itemId });
@@ -247,30 +236,21 @@ app.post('/addtocart', fetchUser, async (req, res) => {
       await product.save();
 
       await User.findOneAndUpdate({ _id: req.user.id }, { cartData: userData.cartData });
-      res.json({ message: "Added" }); // Sending JSON response
+      res.json({ message: "Added" });
     } else {
-      res.status(400).json({ error: "Product out of stock" }); // Sending JSON response with error
+      res.status(400).json({ error: "Product out of stock" });
     }
   } catch (error) {
     console.error("Error adding to cart:", error);
-    res.status(500).json({ error: "Internal Server Error" }); // Sending JSON response with error
+    res.status(500).json({ error: "Internal Server Error" });
   }
 });
 
-
-
-
-// Endpoint to remove product from cart
 // Endpoint to remove product from cart
 app.post('/removefromcart', fetchUser, async (req, res) => {
-  console.log("Request body:", req.body);
-
   try {
     let userData = await User.findOne({ _id: req.user.id });
-    console.log("User data:", userData);
-
     let product = await Product.findOne({ id: req.body.itemId });
-    console.log("Product before update:", product);
 
     if (!userData || !product) {
       return res.status(404).send("User or Product not found");
@@ -280,10 +260,7 @@ app.post('/removefromcart', fetchUser, async (req, res) => {
       userData.cartData[req.body.itemId] -= 1;
       product.quantity += 1;
 
-      console.log("Current quantity before update:", product.quantity);
       await product.save();
-      console.log("New quantity after update:", product.quantity);
-
       await User.findOneAndUpdate({ _id: req.user.id }, { cartData: userData.cartData });
       res.status(200).send("Removed");
     } else {
@@ -295,73 +272,49 @@ app.post('/removefromcart', fetchUser, async (req, res) => {
   }
 });
 
-
-
 // Endpoint to get cart data
 app.post('/getcart', fetchUser, async (req, res) => {
-  console.log("GetCart");
   let userData = await User.findOne({ _id: req.user.id });
-  res.json(userData.cartData);
-})
-
-// Schema for creating Payment model
-const Payment = mongoose.model('Payment', {
-  transactionUuid: {
-    type: String,
-    required: true,
-  },
-  amount: {
-    type: String,
-    required: true,
-  },
-  userId: {
-    type: String,
-    required: true,
+  if (userData) {
+    res.send(userData.cartData);
+  } else {
+    res.status(404).send("User not found");
   }
 });
 
+// Schema for storing payments
+const Payment = mongoose.model('Payment', {
+  amount: {
+    type: Number, // Ensure amount is a number
+    required: true
+  },
+  paymentMethod: {
+    type: String,
+    required: true
+  },
+  date: {
+    type: Date,
+    default: Date.now
+  }
+});
 
-
-app.post("/payment-success", async (req, res) => {
-  const { amount, transactionUuid, userId } = req.body;
+// Endpoint for adding payment
+app.post('/payment', async (req, res) => {
+  const payment = new Payment({
+    amount: req.body.amount,
+    paymentMethod: req.body.paymentMethod,
+  });
 
   try {
-    // Create a new Payment instance
-    const newPayment = new Payment({
-      transactionUuid: transactionUuid,
-      amount: amount, // Ensure the amount is a number
-      userId: userId,
-    });
-
-    // Save the new Payment instance to the database
-    await newPayment.save();
-
-    console.log('Payment saved:', newPayment);
-
-    // Find the user by userId and clear their cartData
-    const user = await User.findById(userId);
-    if (user) {
-      user.cartData = {}; // Clear the cart data
-      await user.save();
-      console.log('User cart data cleared:', user);
-    } else {
-      console.warn('User not found with ID:', userId);
-    }
-
-    // Send a success response
-    res.json({ success: true, payment: newPayment });
+    await payment.save();
+    res.json({ success: true });
   } catch (error) {
-    console.error('Error saving payment or clearing user cart data:', error);
-    res.status(500).json({ success: false, message: 'Internal server error' });
+    console.error("Error processing payment:", error);
+    res.status(500).json({ success: false, error: "Internal Server Error" });
   }
 });
 
-
-// Start the server
-app.listen(port, (error) => {
-  if (!error) {
-    console.log("Server Running on port " + port);
-  } else {
-    console.log("Error: " + error);
-  }
+// Server listener
+app.listen(port, () => {
+  console.log(`Server is running on http://localhost:${port}`);
 });
