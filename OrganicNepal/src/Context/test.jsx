@@ -97,38 +97,22 @@ const ShopContextProvider = (props) => {
                 ...prev,
                 [itemId]: prev[itemId] - 1 // Decrement item quantity in cart (if > 0)
             }));
-    
+
             if (localStorage.getItem('auth-token')) {
-                try {
-                    const response = await fetch('http://localhost:4000/removefromcart', {
-                        method: 'POST',
-                        headers: {
-                            Accept: 'text/plain', // Expect plain text response
-                            'auth-token': `${localStorage.getItem('auth-token')}`,
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({ "itemId": itemId })
-                    });
-    
-                    // Read response as text
-                    const responseText = await response.text();
-                    
-                    if (!response.ok) {
-                        throw new Error(responseText || 'An error occurred.');
-                    }
-    
-                    // Handle successful response
-                    console.log(responseText); // Optional
-    
-                } catch (error) {
-                    console.error("Error removing from cart:", error);
-                    alert(error.message || 'An error occurred. Please try again.');
-                }
+                const response = await fetch('http://localhost:4000/removefromcart', {
+                    method: 'POST',
+                    headers: {
+                        Accept: 'application/json',
+                        'auth-token': `${localStorage.getItem('auth-token')}`,
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ "itemId": itemId })
+                });
+                const data = await response.json();
+                console.log(data);
             }
         }
     };
-    
-    
 
     // Function to get total cart amount
     const getTotalCartAmount = () => {
