@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import './AddProduct.css';
 import upload_area from '../../assets/upload_area.svg';
+import Navbar from '../Navbar/Navbar';
+import Sidebar from '../Sidebar/Sidebar';
 
 const AddProduct = () => {
   const [image, setImage] = useState(null);
@@ -9,7 +11,9 @@ const AddProduct = () => {
     image: "",
     category: "himalayan",
     new_price: "",
-    old_price: ""
+    old_price: "",
+    quantity: "",
+    description: ""
   });
 
   const imageHandler = (e) => {
@@ -22,7 +26,7 @@ const AddProduct = () => {
     setProductDetails({ ...productDetails, [e.target.name]: e.target.value });
   };
 
-  const Add_Product = async () => {
+  const addProduct = async () => {
     console.log(productDetails);
     let responseData;
     let product = { ...productDetails };
@@ -55,7 +59,18 @@ const AddProduct = () => {
 
         const addProductData = await addProductResponse.json();
         if (addProductData.success) {
-          alert("Product Added");
+          alert("Product Added Successfully!");
+          // Clear form after successful addition
+          setProductDetails({
+            name: "",
+            image: "",
+            category: "himalayan",
+            new_price: "",
+            old_price: "",
+            quantity: "",
+            description: ""
+          });
+          setImage(null);
         } else {
           alert("Failed to add product");
         }
@@ -69,74 +84,100 @@ const AddProduct = () => {
   };
 
   return (
-    <div className='add-product'>
-      <div className="addproduct-itemfield">
-        <p>Product title</p>
-        <input
-          value={productDetails.name}
-          onChange={changeHandler}
-          type="text"
-          name='name'
-          placeholder='Type here'
-          autoComplete="off"
-        />
-      </div>
-      <div className="addproduct-price">
+    <>
+      <Navbar />
+      <Sidebar />
+      <div className='add-product'>
+        <h1>Add Product</h1>
         <div className="addproduct-itemfield">
-          <p>Price</p>
+          <p>Product Title</p>
           <input
-            value={productDetails.old_price}
+            value={productDetails.name}
             onChange={changeHandler}
             type="text"
-            name='old_price'
-            placeholder='Type here'
+            name='name'
+            placeholder='Enter product title'
+            autoComplete="off"
+          />
+        </div>
+        <div className="addproduct-price">
+          <div className="addproduct-itemfield">
+            <p>Price</p>
+            <input
+              value={productDetails.old_price}
+              onChange={changeHandler}
+              type="text"
+              name='old_price'
+              placeholder='Enter price'
+              autoComplete="off"
+            />
+          </div>
+          <div className="addproduct-itemfield">
+            <p>Offer Price</p>
+            <input
+              value={productDetails.new_price}
+              onChange={changeHandler}
+              type="text"
+              name='new_price'
+              placeholder='Enter offer price'
+              autoComplete="off"
+            />
+          </div>
+        </div>
+        <div className="addproduct-itemfield">
+          <p>Product Category</p>
+          <select
+            value={productDetails.category}
+            onChange={changeHandler}
+            name="category"
+            className='add-product-selector'
+            autoComplete="off"
+          >
+            <option value="himalayan">Himalayan</option>
+            <option value="hilly">Hilly</option>
+            <option value="terai">Terai</option>
+          </select>
+        </div>
+        <div className="addproduct-itemfield">
+          <p>Quantity</p>
+          <input
+            value={productDetails.quantity}
+            onChange={changeHandler}
+            type="number"
+            name='quantity'
+            placeholder='Enter quantity'
             autoComplete="off"
           />
         </div>
         <div className="addproduct-itemfield">
-          <p>Offer Price</p>
-          <input
-            value={productDetails.new_price}
+          <p>Description</p>
+          <textarea
+            value={productDetails.description}
             onChange={changeHandler}
-            type="text"
-            name='new_price'
-            placeholder='Type here'
-            autoComplete="off"
+            name='description'
+            placeholder='Enter product description here'
+            rows="4"
           />
         </div>
-      </div>
-      <div className="addproduct-itemfield">
-        <p>Product Category</p>
-        <select
-          value={productDetails.category}
-          onChange={changeHandler}
-          name="category"
-          className='add-product-selector'
-          autoComplete="off"
-        >
-          <option value="himalayan">Himalayan</option>
-          <option value="hilly">Hilly</option>
-          <option value="terai">Terai</option>
-        </select>
-      </div>
-      <div className="addproduct-itemfield">
-        <label htmlFor="file-input">
-          <img
-            src={image ? URL.createObjectURL(image) : upload_area}
-            className='addproduct-thumbnail-img'
-            alt="Upload"
+        <div className="addproduct-itemfield">
+          <label htmlFor="file-input">
+            <img
+              src={image ? URL.createObjectURL(image) : upload_area}
+              className='addproduct-thumbnail-img'
+              alt="Upload"
+            />
+          </label>
+          <input
+            onChange={imageHandler}
+            type="file"
+            name='image'
+            id='file-input'
+            hidden
           />
-        </label>
-        <input
-          onChange={imageHandler}
-          type="file"
-          name='image'
-          id='file-input'
-          hidden
-        />
+        </div>
+        <button onClick={addProduct} className='addproduct-btn'>ADD</button>
       </div>
-      <button onClick={Add_Product} className='addproduct-btn'>ADD</button>
-    </div>
+    </>
   );
 };
 

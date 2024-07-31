@@ -1,10 +1,15 @@
-.list-product {
+/* Inventory.css */
+.inventory-list-container {
     display: flex;
     flex-direction: column;
-    align-items: center; /* Align center vertically */
-    justify-content: flex-start; /* Align to the top */
-    margin-left: 250px; /* Adjust the sidebar width */
-    margin-top: -750px; /* Adjust the top margin to clear the navbar */
+    align-items: center;
+    width: 100%;
+    height: 740px; /* Adjust height as needed */
+    padding: 10px 50px;
+    margin-top:-770px;
+    margin-left: 60px;
+    border-radius: 6px;
+    background: white;
   }
   
   .product-list-box {
@@ -17,7 +22,7 @@
     background: white;
   }
   
-  .listproduct-format-main {
+  .inventory-format-main {
     display: grid;
     grid-template-columns: 1fr 3fr 1fr 1fr 1fr 1fr;
     gap: 10px;
@@ -29,7 +34,7 @@
     text-align: center;
   }
   
-  .listproduct-format {
+  .inventory-item-format {
     display: grid;
     grid-template-columns: 1fr 3fr 1fr 1fr 1fr 1fr;
     gap: 10px;
@@ -41,39 +46,34 @@
     align-items: center;
   }
   
-  .listproduct-product-icon {
+  .inventory-product-icon {
     height: 80px;
   }
   
-  .listproduct-remove-icon {
+  .inventory-remove-icon {
     cursor: pointer;
     margin: auto;
   }
   
-  .listproduct-allproducts {
+  .inventory-all-items {
     overflow-y: auto;
   }
   
-  @media (max-width: 992px) {
-    .list-product {
-      margin-left: 0; /* Reset margin for smaller screens */
+  @media (max-width: 800px) {
+    .inventory-list-container {
+      box-sizing: border-box;
+      width: 95%;
+      height: 100%;
+      padding: 10px 30px;
+      margin: 10px 30px;
     }
   
-    .product-list-box {
-      padding: 8px;
-    }
-  
-    .listproduct-format-main {
+    .inventory-format-main {
       padding: 15px 0px;
       font-size: 12px;
     }
   
-    .listproduct-format {
-      padding: 10px 0px;
-      font-size: 12px;
-    }
-  
-    .listproduct-product-icon {
+    .inventory-product-icon {
       height: 60px;
     }
   }

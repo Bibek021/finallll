@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import './ListProduct.css';
 import cross_icon from '../../assets/cross_icon.png';
-import Navbar from './../Navbar/Navbar.jsx'
-import Sidebar from './../Sidebar/Sidebar.jsx'
+import Navbar from '../Navbar/Navbar.jsx';
+import Sidebar from '../Sidebar/Sidebar.jsx';
+
 const ListProduct = () => {
   const [allProducts, setAllProducts] = useState([]);
 
@@ -38,36 +39,39 @@ const ListProduct = () => {
 
   return (
     <>
-    <Navbar/>
-    <Sidebar/>
-    <div className='list-product'>
-      <h1>All Products List</h1>
-      <div className="listproduct-format-main">
-        <p>Products</p>
-        <p>Title</p>
-        <p>Old Price</p>
-        <p>New Price</p>
-        <p>Category</p>
-        <p>Remove</p>
-      </div>
-      <div className="listproduct-allproducts">
-        <hr />
-        {allProducts.map((product) => (
-          <div key={product.id}>
-            <div className="listproduct-format-main listproduct-format">
-              <img src={product.image} alt="" className="listproduct-product-icon" />
-              <p>{product.name}</p>
-              <p>${product.old_price}</p>
-              <p>${product.new_price}</p>
-              <p>{product.category}</p>
-              <img onClick={() => removeProduct(product.id)} className='listproduct-remove-icon' src={cross_icon} alt="Remove" />
-            </div>
-            <hr />
+      <Navbar />
+      <Sidebar />
+      <div className='list-product'>
+        <h1>All Products List</h1>
+        <div className="product-list-box">
+          <div className="listproduct-format-main">
+            <p>Products</p>
+            <p>Title</p>
+            <p>Old Price</p>
+            <p>New Price</p>
+            <p>Category</p>
+            <p>Remove</p>
           </div>
-        ))}
+          <div className="listproduct-allproducts">
+            <hr />
+            {allProducts.map((product) => (
+              <div key={product.id}>
+                <div className="listproduct-format-main listproduct-format">
+                  <img src={product.image} alt="" className="listproduct-product-icon" />
+                  <p>{product.name}</p>
+                  <p>${product.old_price}</p>
+                  <p>${product.new_price}</p>
+                  <p>{product.category}</p>
+                  <p>{product.quantity}</p>
+                  <img onClick={() => removeProduct(product.id)} className='listproduct-remove-icon' src={cross_icon} alt="Remove" />
+                </div>
+                <hr />
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
-    </div>
-        </>
+    </>
   );
 };
 
