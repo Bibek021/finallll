@@ -92,26 +92,73 @@ const Product = mongoose.model("Product", {
 
 // Endpoint to add a new product
 app.post('/addproduct', async (req, res) => {
+  // Extract product details from the request body
+  const { name, image, category, new_price, old_price, quantity, description } = req.body;
+
+  // Validate that the required fields are present
+  if (!name || !category || !new_price || !old_price || !quantity) {
+    return res.status(400).json({
+      success: false,
+      message: 'All fields are required.',
+    });
+  }
+
+  // Validate that new_price, old_price, and quantity are numbers
+  const newPrice = parseFloat(new_price);
+  const oldPrice = parseFloat(old_price);
+  const qty = parseInt(quantity, 10);
+
+  if (isNaN(newPrice) || newPrice <= 0) {
+    return res.status(400).json({
+      success: false,
+      message: 'Offer price must be a positive number.',
+    });
+  }
+
+  if (isNaN(oldPrice) || oldPrice <= 0) {
+    return res.status(400).json({
+      success: false,
+      message: 'Price must be a positive number.',
+    });
+  }
+
+  if (isNaN(qty) || qty <= 0) {
+    return res.status(400).json({
+      success: false,
+      message: 'Quantity must be a positive number.',
+    });
+  }
+
   // Get the latest product id and increment by 1
-  const products = await Product.find({});
-  const id = products.length > 0 ? products[products.length - 1].id + 1 : 1;
+  try {
+    const products = await Product.find({});
+    const id = products.length > 0 ? products[products.length - 1].id + 1 : 1;
 
-  const product = new Product({
-    id,
-    name: req.body.name,
-    image: req.body.image,
-    category: req.body.category,
-    new_price: req.body.new_price,
-    old_price: req.body.old_price,
-    quantity: req.body.quantity,
-    description: req.body.description,
-  });
+    // Create a new product with the validated data
+    const product = new Product({
+      id,
+      name,
+      image,
+      category,
+      new_price: newPrice,
+      old_price: oldPrice,
+      quantity: qty,
+      description,
+    });
 
-  await product.save();
-  res.json({
-    success: true,
-    name: req.body.name,
-  });
+    // Save the product to the database
+    await product.save();
+    res.json({
+      success: true,
+      name,
+    });
+  } catch (error) {
+    console.error("Error saving product:", error);
+    res.status(500).json({
+      success: false,
+      message: 'An error occurred while saving the product.',
+    });
+  }
 });
 
 // Endpoint for deleting a product
