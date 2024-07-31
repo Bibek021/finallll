@@ -9,7 +9,7 @@ const Navbar = () => {
     localStorage.removeItem('authToken');
     // You can perform additional logout-related tasks here if needed
     // Example: redirect to the login page
-    window.location.href = '/login';
+    window.location.href = '/adminlogin';
   };
 
   return (

@@ -5,6 +5,7 @@
     justify-content: flex-start; /* Align to the top */
     margin-left: 250px; /* Adjust the sidebar width */
     margin-top: -750px; /* Adjust the top margin to clear the navbar */
+    margin-bottom: 50px;
   }
   
   .product-list-box {
