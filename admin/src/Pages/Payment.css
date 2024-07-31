@@ -1,0 +1,103 @@
+/* Payment.css */
+.payment-list-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 75%;
+    height: 740px; /* Adjust height as needed */
+    padding: 10px 50px;
+    margin-top: -770px;
+    margin-left: 240px;
+    border-radius: 6px;
+    background: white;
+    margin-bottom: 60px;
+}
+
+.header-search-container {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    max-width: 1200px; /* Adjust max-width as needed */
+    justify-content: space-between; /* Align items on the same line with space between them */
+    padding-bottom: 10px; /* Space below the header and search bar */
+}
+
+.payment-list-box {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 10px;
+    width: 100%;
+    max-width: 1200px; /* Adjust max-width as needed */
+    margin-top: 20px; /* Adjust top margin as needed */
+    background: white;
+}
+
+.payment-format-main {
+    display: grid;
+    grid-template-columns: 1fr 2fr 2fr;
+    gap: 10px;
+    width: 100%;
+    padding: 10px 0px;
+    color: #454545;
+    font-size: 15px;
+    font-weight: 600;
+    text-align: center;
+}
+
+.payment-item-format {
+    display: grid;
+    grid-template-columns: 1fr 2fr 2fr;
+    gap: 10px;
+    padding: 10px 0px;
+    color: #454545;
+    font-size: 14px;
+    font-weight: 400;
+    text-align: center;
+    align-items: center;
+}
+
+.search-bar {
+    min-width: 300px; /* Set a minimum width */
+    max-width: 600px; /* Set a maximum width */
+    padding: 8px;
+    margin-right: 10px;
+    flex: 1; /* Take up the remaining space */
+}
+
+.search-button {
+    padding: 8px 16px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-right: 60px;
+}
+
+.search-button:hover {
+    background-color: #0056b3;
+}
+
+.payment-all-items {
+    overflow-y: auto;
+}
+
+@media (max-width: 800px) {
+    .payment-list-container {
+        box-sizing: border-box;
+        width: 95%;
+        height: 100%;
+        padding: 10px 30px;
+        margin: 10px 30px;
+    }
+
+    .header-search-container {
+        flex-direction: column; /* Stack header and search bar vertically on small screens */
+        align-items: flex-start;
+    }
+
+    .payment-format-main {
+        padding: 15px 0px;
+        font-size: 12px;
+    }
+}

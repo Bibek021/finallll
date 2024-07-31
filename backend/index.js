@@ -200,6 +200,22 @@ const User = mongoose.model('User', {
   }
 });
 
+
+// Endpoint to get all users
+app.get('/allusers', async (req, res) => {
+  try {
+    const users = await User.find({});
+    res.json(users);
+  } catch (error) {
+    console.error("Error fetching users:", error);
+    res.status(500).json({
+      success: false,
+      message: 'An error occurred while fetching users.',
+    });
+  }
+});
+
+
 // Endpoint for user registration
 app.post('/signup', async (req, res) => {
   const check = await User.findOne({ email: req.body.email });
@@ -342,6 +358,20 @@ const Payment = mongoose.model('Payment', {
   userId: {
     type: String,
     required: true,
+  }
+});
+
+//Endpoint for fetching allpayment
+app.get('/allpayments', async (req, res) => { // Updated to '/allpayments'
+  try {
+    const payments = await Payment.find({});
+    res.json(payments);
+  } catch (error) {
+    console.error("Error fetching Payments:", error);
+    res.status(500).json({
+      success: false,
+      message: 'An error occurred while fetching payments.',
+    });
   }
 });
 

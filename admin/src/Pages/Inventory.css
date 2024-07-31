@@ -1,81 +1,108 @@
 /* Inventory.css */
 .inventory-list-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-    height: 740px; /* Adjust height as needed */
-    padding: 10px 50px;
-    margin-top:-770px;
-    margin-left: 60px;
-    border-radius: 6px;
-    background: white;
-    margin-bottom: 60px;
-  }
-  
-  .product-list-box {
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    padding: 10px;
-    width: 100%;
-    max-width: 1200px; /* Adjust max-width as needed */
-    margin-top: 20px; /* Adjust top margin as needed */
-    background: white;
-  }
-  
-  .inventory-format-main {
-    display: grid;
-    grid-template-columns: 1fr 3fr 1fr 1fr 1fr 1fr;
-    gap: 10px;
-    width: 100%;
-    padding: 10px 0px;
-    color: #454545;
-    font-size: 15px;
-    font-weight: 600;
-    text-align: center;
-  }
-  
-  .inventory-item-format {
-    display: grid;
-    grid-template-columns: 1fr 3fr 1fr 1fr 1fr 1fr;
-    gap: 10px;
-    padding: 10px 0px;
-    color: #454545;
-    font-size: 14px;
-    font-weight: 400;
-    text-align: center;
-    align-items: center;
-  }
-  
-  .inventory-product-icon {
-    height: 80px;
-  }
-  
-  .inventory-remove-icon {
-    cursor: pointer;
-    margin: auto;
-  }
-  
-  .inventory-all-items {
-    overflow-y: auto;
-  }
-  
-  @media (max-width: 800px) {
-    .inventory-list-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 70%;
+  height: 740px; /* Adjust height as needed */
+  padding: 10px 50px;
+  margin-top: -770px;
+  margin-left: 260px;
+  border-radius: 6px;
+  background: white;
+  margin-bottom: 60px;
+}
+
+.header-search-container {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  max-width: 1200px; /* Adjust max-width as needed */
+  justify-content: space-between; /* Align items on the same line with space between them */
+  padding-bottom: 10px; /* Space below the header and search bar */
+}
+
+.product-list-box {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 10px;
+  width: 100%;
+  max-width: 1200px; /* Adjust max-width as needed */
+  margin-top: 20px; /* Adjust top margin as needed */
+  background: white;
+}
+
+.inventory-format-main {
+  display: grid;
+  grid-template-columns: 1fr 3fr 1fr 1fr 1fr 1fr;
+  gap: 10px;
+  width: 100%;
+  padding: 10px 0px;
+  color: #454545;
+  font-size: 15px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.inventory-item-format {
+  display: grid;
+  grid-template-columns: 1fr 3fr 1fr 1fr 1fr 1fr;
+  gap: 10px;
+  padding: 10px 0px;
+  color: #454545;
+  font-size: 14px;
+  font-weight: 400;
+  text-align: center;
+  align-items: center;
+}
+
+.inventory-product-icon {
+  height: 80px;
+}
+
+.inventory-remove-icon {
+  cursor: pointer;
+  margin: auto;
+}
+
+.inventory-all-items {
+  overflow-y: auto;
+}
+
+.search-bar {
+  padding: 8px;
+  margin-right: 8px;
+  flex: 1; /* Take up the remaining space */
+}
+
+.search-button {
+  padding: 8px 16px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.search-button:hover {
+  background-color: #0056b3;
+}
+
+@media (max-width: 800px) {
+  .inventory-list-container {
       box-sizing: border-box;
       width: 95%;
       height: 100%;
       padding: 10px 30px;
       margin: 10px 30px;
-    }
-  
-    .inventory-format-main {
+  }
+
+  .inventory-format-main {
       padding: 15px 0px;
       font-size: 12px;
-    }
-  
-    .inventory-product-icon {
-      height: 60px;
-    }
   }
-  
+
+  .inventory-product-icon {
+      height: 60px;
+  }
+}

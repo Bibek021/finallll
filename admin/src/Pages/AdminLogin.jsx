@@ -1,21 +1,19 @@
-// AdminLogin.jsx
 import React, { useState } from 'react';
-import './AdminLogin.css'; // Assuming you have defined AdminLogin.css
+import './AdminLogin.css';
 
-const AdminLogin = () => {
+const AdminLogin = ({ onLogin }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
   const handleLogin = () => {
     if (username === 'admin' && password === 'password') {
-      // Navigate to /productlist upon successful login using window.location
-      window.location.href = '/listproduct';
-    } else if(username ==='admin' && password!= 'password') {
-      setError('Invalid  password');
-    }
-    else{
-      setError('Invalid Username')
+      // Simulate storing an authentication token
+      localStorage.setItem('authToken', 'fake-jwt-token');
+      onLogin(); // Notify parent component about successful login
+      window.location.href='/listproduct';
+    } else {
+      setError('Invalid credentials');
     }
   };
 

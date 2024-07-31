@@ -92,26 +92,73 @@ const Product = mongoose.model("Product", {
 
 // Endpoint to add a new product
 app.post('/addproduct', async (req, res) => {
+  // Extract product details from the request body
+  const { name, image, category, new_price, old_price, quantity, description } = req.body;
+
+  // Validate that the required fields are present
+  if (!name || !category || !new_price || !old_price || !quantity) {
+    return res.status(400).json({
+      success: false,
+      message: 'All fields are required.',
+    });
+  }
+
+  // Validate that new_price, old_price, and quantity are numbers
+  const newPrice = parseFloat(new_price);
+  const oldPrice = parseFloat(old_price);
+  const qty = parseInt(quantity, 10);
+
+  if (isNaN(newPrice) || newPrice <= 0) {
+    return res.status(400).json({
+      success: false,
+      message: 'Offer price must be a positive number.',
+    });
+  }
+
+  if (isNaN(oldPrice) || oldPrice <= 0) {
+    return res.status(400).json({
+      success: false,
+      message: 'Price must be a positive number.',
+    });
+  }
+
+  if (isNaN(qty) || qty <= 0) {
+    return res.status(400).json({
+      success: false,
+      message: 'Quantity must be a positive number.',
+    });
+  }
+
   // Get the latest product id and increment by 1
-  const products = await Product.find({});
-  const id = products.length > 0 ? products[products.length - 1].id + 1 : 1;
+  try {
+    const products = await Product.find({});
+    const id = products.length > 0 ? products[products.length - 1].id + 1 : 1;
 
-  const product = new Product({
-    id,
-    name: req.body.name,
-    image: req.body.image,
-    category: req.body.category,
-    new_price: req.body.new_price,
-    old_price: req.body.old_price,
-    quantity: req.body.quantity,
-    description: req.body.description,
-  });
+    // Create a new product with the validated data
+    const product = new Product({
+      id,
+      name,
+      image,
+      category,
+      new_price: newPrice,
+      old_price: oldPrice,
+      quantity: qty,
+      description,
+    });
 
-  await product.save();
-  res.json({
-    success: true,
-    name: req.body.name,
-  });
+    // Save the product to the database
+    await product.save();
+    res.json({
+      success: true,
+      name,
+    });
+  } catch (error) {
+    console.error("Error saving product:", error);
+    res.status(500).json({
+      success: false,
+      message: 'An error occurred while saving the product.',
+    });
+  }
 });
 
 // Endpoint for deleting a product
@@ -125,8 +172,7 @@ app.post('/removeproduct', async (req, res) => {
 // Endpoint to get all products
 app.get('/allproducts', async (req, res) => {
   const products = await Product.find({});
-  res.send(products)
-
+  res.send(products);
 });
 
 // Schema for creating users
@@ -145,7 +191,8 @@ const User = mongoose.model('User', {
     required: true,
   },
   cartData: {
-    type: Object,
+    type: [Number], // Use an array for cart data
+    default: () => Array(300).fill(0), // Initialize with 300 items, all set to 0
   },
   date: {
     type: Date,
@@ -164,14 +211,10 @@ app.post('/signup', async (req, res) => {
   const salt = await bcrypt.genSalt(10);
   const hashedPassword = await bcrypt.hash(req.body.password, salt);
 
-  // Initialize cart with default values
-  const cart = Array.from({ length: 300 }, () => 0);
-
   const user = new User({
     name: req.body.username,
     email: req.body.email,
     password: hashedPassword,
-    cartData: cart,
   });
 
   await user.save();
@@ -188,8 +231,7 @@ app.post('/login', async (req, res) => {
     const passCompare = await bcrypt.compare(req.body.password, user.password);
     if (passCompare) {
       const token = jwt.sign({ user: { id: user.id } }, 'secret_ecom');
-      res.json({ success: true, token:token, id:user.id });
-   
+      res.json({ success: true, token: token, id: user.id });
     } else {
       res.status(401).json({ success: false, error: "Wrong Password" });
     }
@@ -202,18 +244,14 @@ app.post('/login', async (req, res) => {
 app.get('/newcollections', async (req, res) => {
   let products = await Product.find({});
   let newCollection = products.slice(1).slice(-8); // Get the last 8 products
-  console.log("NewCollection Fetched");
   res.send(newCollection);
-
 })
 
 // Endpoint to get popular products
 app.get('/popularwithus', async (req, res) => {
   let products = await Product.find({ category: "terai" });
   let popular_with_us = products.slice(0, 4); // Get the first 4 products
-  console.log("Popular with us Fetched");
   res.send(popular_with_us);
-
 })
 
 // Middleware to fetch user from JWT token
@@ -232,9 +270,7 @@ const fetchUser = async (req, res, next) => {
 }
 
 // Endpoint to add product to cart
-// Endpoint to add product to cart
 app.post('/addtocart', fetchUser, async (req, res) => {
-  console.log("Added", req.body.itemId);
   try {
     let userData = await User.findOne({ _id: req.user.id });
     let product = await Product.findOne({ id: req.body.itemId });
@@ -247,71 +283,60 @@ app.post('/addtocart', fetchUser, async (req, res) => {
       await product.save();
 
       await User.findOneAndUpdate({ _id: req.user.id }, { cartData: userData.cartData });
-      res.json({ message: "Added" }); // Sending JSON response
+      res.json({ message: "Added" });
     } else {
-      res.status(400).json({ error: "Product out of stock" }); // Sending JSON response with error
+      res.status(400).json({ error: "Product out of stock" });
     }
   } catch (error) {
     console.error("Error adding to cart:", error);
-    res.status(500).json({ error: "Internal Server Error" }); // Sending JSON response with error
+    res.status(500).json({ error: "Internal Server Error" });
   }
 });
-
-
-
 
 // Endpoint to remove product from cart
 app.post('/removefromcart', fetchUser, async (req, res) => {
-  console.log("Request body:", req.body);
-
   try {
-      let userData = await User.findOne({ _id: req.user.id });
-      console.log("User data:", userData);
+    let userData = await User.findOne({ _id: req.user.id });
+    let product = await Product.findOne({ id: req.body.itemId });
 
-      let product = await Product.findOne({ id: req.body.itemId });
-      console.log("Product before update:", product);
+    if (!userData || !product) {
+      return res.status(404).send("User or Product not found");
+    }
 
-      if (!userData || !product) {
-          return res.status(404).send("User or Product not found");
-      }
+    if (userData.cartData[req.body.itemId] > 0) {
+      userData.cartData[req.body.itemId] -= 1;
+      product.quantity += 1;
 
-      if (userData.cartData[req.body.itemId] > 0) {
-          userData.cartData[req.body.itemId] -= 1;
-          product.quantity += 1;
-
-          console.log("Current quantity before update:", product.quantity);
-          await product.save();
-          console.log("New quantity after update:", product.quantity);
-
-          await User.findOneAndUpdate({ _id: req.user.id }, { cartData: userData.cartData });
-          res.status(200).send("Removed");
-      } else {
-          res.status(400).send("Item not found in cart");
-      }
+      await product.save();
+      await User.findOneAndUpdate({ _id: req.user.id }, { cartData: userData.cartData });
+      res.status(200).send("Removed");
+    } else {
+      res.status(400).send("Item not found in cart");
+    }
   } catch (error) {
-      console.error("Error removing from cart:", error);
-      res.status(500).send("Internal Server Error");
+    console.error("Error removing from cart:", error);
+    res.status(500).send("Internal Server Error");
   }
 });
 
-
-
-
 // Endpoint to get cart data
 app.post('/getcart', fetchUser, async (req, res) => {
-  console.log("GetCart");
   let userData = await User.findOne({ _id: req.user.id });
-  res.json(userData.cartData);
-})
+  if (userData) {
+    res.send(userData.cartData);
+  } else {
+    res.status(404).send("User not found");
+  }
+});
 
-// Schema for creating Payment model
+// Schema for storing payments
 const Payment = mongoose.model('Payment', {
   transactionUuid: {
     type: String,
     required: true,
   },
   amount: {
-    type: String,
+    type: Number,
     required: true,
   },
   userId: {
@@ -320,8 +345,7 @@ const Payment = mongoose.model('Payment', {
   }
 });
 
-
-
+// Endpoint for adding payment
 app.post("/payment-success", async (req, res) => {
   const { amount, transactionUuid, userId } = req.body;
 
@@ -341,7 +365,7 @@ app.post("/payment-success", async (req, res) => {
     // Find the user by userId and clear their cartData
     const user = await User.findById(userId);
     if (user) {
-      user.cartData = {}; // Clear the cart data
+      user.cartData = []; // Clear the cart data
       await user.save();
       console.log('User cart data cleared:', user);
     } else {
@@ -356,12 +380,7 @@ app.post("/payment-success", async (req, res) => {
   }
 });
 
-
-// Start the server
-app.listen(port, (error) => {
-  if (!error) {
-    console.log("Server Running on port " + port);
-  } else {
-    console.log("Error: " + error);
-  }
+// Server listener
+app.listen(port, () => {
+  console.log(`Server is running on http://localhost:${port}`);
 });
