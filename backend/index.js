@@ -265,7 +265,7 @@ app.get('/newcollections', async (req, res) => {
 
 // Endpoint to get popular products
 app.get('/popularwithus', async (req, res) => {
-  let products = await Product.find({ category: "terai" });
+  let products = await Product.find();
   let popular_with_us = products.slice(0, 4); // Get the first 4 products
   res.send(popular_with_us);
 })

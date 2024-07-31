@@ -10,9 +10,10 @@ const Breadcrum = ({ product }) => {
   return (
     <div className='breadcrum'>
       <a href="/">HOME</a> <img src={arrow_icon} alt="arrow" /> 
-      <a href="/shop">SHOP</a> <img src={arrow_icon} alt="arrow" /> 
-      <span>{product.category}</span> <img src={arrow_icon} alt="arrow" /> 
-      <span>{product.name}</span>
+      <a href="/">SHOP</a> <img src={arrow_icon} alt="arrow" /> 
+      <span> <a href="/mountains">{product.category}</a> </span> <img src={arrow_icon} alt="arrow" /> 
+      <span> <a href="">{product.name}</a> </span> <img src={arrow_icon} alt="arrow" /> 
+      
     </div>
   );
 };

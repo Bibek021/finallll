@@ -3,26 +3,43 @@ import './Navbar.css';
 import logo from '../Assets/logo.png';
 import cart_icon from '../Assets/cart icon.png';
 import nav_dropdown from '../Assets/nav_dropdown.png'; // Import your dropdown icon here
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { ShopContext } from '../../Context/ShopContext';
 
 const Navbar = () => {
     const [menu, setMenu] = useState("shop");
     const { getTotalCartItems } = useContext(ShopContext);
     const menuRef = useRef(null); // Initialize menuRef
+    const navigate = useNavigate(); // Initialize useNavigate
 
     const dropdownToggle = (e) => {
         menuRef.current.classList.toggle('nav-menu-visible');
         e.target.classList.toggle('open');
     };
 
+    const handleLogoClick = () => {
+        navigate('/'); // Navigate to home route
+    };
+
     return (
         <div className='navbar'>
             <div className="nav-logo">
-                <img src={logo} height={100} width={100} alt="" />
+                <img 
+                    src={logo} 
+                    height={100} 
+                    width={100} 
+                    alt="Logo" 
+                    className='navigateto' 
+                    onClick={handleLogoClick} // Navigate on click
+                />
                 <p>OrganicNepal</p>
             </div>
-            <img className="nav-dropdown" onClick={dropdownToggle} src={nav_dropdown} alt="Menu" />
+            <img 
+                className="nav-dropdown" 
+                onClick={dropdownToggle} 
+                src={nav_dropdown} 
+                alt="Menu" 
+            />
             <ul ref={menuRef} className="nav-menu">
                 <li onClick={() => { setMenu("shop") }}>
                     <Link style={{ textDecoration: 'none' }} to='/'>Shop</Link>
@@ -45,7 +62,7 @@ const Navbar = () => {
                 {localStorage.getItem('auth-token')
                     ? <button onClick={() => { localStorage.removeItem('auth-token'); window.location.replace('/') }}>Logout</button>
                     : <Link to='/login'><button>Login</button></Link>}
-                <Link to='/cart'><img src={cart_icon} height={60} width={60} alt="" /></Link>
+                <Link to='/cart'><img src={cart_icon} height={60} width={60} alt="Cart" /></Link>
                 <div className="nav-cart-count">{getTotalCartItems()}</div>
             </div>
         </div>

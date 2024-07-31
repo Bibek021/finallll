@@ -14,7 +14,7 @@ const MedicinalHerbs = () => {
   },[])
   return (
     <div className='medicinal-herbs'>
-        <h1>MEDICINAL HERBS</h1>
+        <h1>OUR PRODUCTS</h1>
         <hr />
         <div className="collections">
            {medicinal_herbs.map((item,i)=>{

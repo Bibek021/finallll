@@ -10,7 +10,7 @@ const ProductDisplay = ({ product }) => {
     <div className='productdisplay'>
       <div className="productdisplay-left">
         <div className="productdisplay-img">
-          <img className='productdisplay-main-img' src={product.image} alt="Main product" />
+          <img className='productdisplay-main-img' src={product.image} alt="Main product"  />
         </div>
         <div className="productdisplay-img-list">
           <img src={product.image} alt="Product thumbnail" />
@@ -27,11 +27,11 @@ const ProductDisplay = ({ product }) => {
           <img src={star_icon} alt="star" />
           <img src={star_icon} alt="star" />
           <img src={star_dull_icon} alt="dull star" />
-          <p>(110)</p>
+          <p>(100)</p>
         </div>
         <div className="productdisplay-right-prices">
-          <div className="productdisplay-right-price-old">Old Price: perkg/{product.old_price}</div>
-          <div className="productdisplay-right-price-new">New Price: perkg/{product.new_price}</div>
+          <div className="productdisplay-right-price-old">Old Price: {product.old_price}/PerKg</div>
+          <div className="productdisplay-right-price-new">New Price: {product.new_price}/PerKg</div>
         </div>
         <div className="productdisplay-right-description">
           {/* 100% Organic product. It is very good for health. Increase your living time. */}

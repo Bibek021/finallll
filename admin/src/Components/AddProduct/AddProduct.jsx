@@ -57,6 +57,12 @@ const AddProduct = () => {
     } else {
       newErrors.new_price = "";
     }
+    if (newPrice > oldPrice) {
+      newErrors.new_price = "Offer price cannot be greater than the original price.";
+      valid = false;
+    } else {
+      newErrors.new_price = "";
+    }
 
     if (isNaN(oldPrice) || oldPrice <= 0) {
       newErrors.old_price = "Price must be a positive number.";
