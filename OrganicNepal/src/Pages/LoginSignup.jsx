@@ -82,7 +82,7 @@ const LoginSignup = () => {
 
       if (responseData.success) {
         localStorage.setItem('auth-token', responseData.token);
-        window.location.replace("/productlist");
+        window.location.replace("/");
       } else {
         setError(responseData.error || 'existing user found with same username');
       }

@@ -284,33 +284,52 @@ app.post('/getcart', fetchUser, async (req, res) => {
 
 // Schema for storing payments
 const Payment = mongoose.model('Payment', {
-  amount: {
-    type: Number, // Ensure amount is a number
-    required: true
-  },
-  paymentMethod: {
+  transactionUuid: {
     type: String,
-    required: true
+    required: true,
   },
-  date: {
-    type: Date,
-    default: Date.now
+  amount: {
+    type: Number,
+    required: true,
+  },
+  userId: {
+    type: String,
+    required: true,
   }
 });
 
 // Endpoint for adding payment
-app.post('/payment', async (req, res) => {
-  const payment = new Payment({
-    amount: req.body.amount,
-    paymentMethod: req.body.paymentMethod,
-  });
+app.post("/payment-success", async (req, res) => {
+  const { amount, transactionUuid, userId } = req.body;
 
   try {
-    await payment.save();
-    res.json({ success: true });
+    // Create a new Payment instance
+    const newPayment = new Payment({
+      transactionUuid: transactionUuid,
+      amount: amount, // Ensure the amount is a number
+      userId: userId,
+    });
+
+    // Save the new Payment instance to the database
+    await newPayment.save();
+
+    console.log('Payment saved:', newPayment);
+
+    // Find the user by userId and clear their cartData
+    const user = await User.findById(userId);
+    if (user) {
+      user.cartData = []; // Clear the cart data
+      await user.save();
+      console.log('User cart data cleared:', user);
+    } else {
+      console.warn('User not found with ID:', userId);
+    }
+
+    // Send a success response
+    res.json({ success: true, payment: newPayment });
   } catch (error) {
-    console.error("Error processing payment:", error);
-    res.status(500).json({ success: false, error: "Internal Server Error" });
+    console.error('Error saving payment or clearing user cart data:', error);
+    res.status(500).json({ success: false, message: 'Internal server error' });
   }
 });
 
