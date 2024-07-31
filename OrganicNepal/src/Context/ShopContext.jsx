@@ -17,7 +17,9 @@ const ShopContextProvider = (props) => {
                     throw new Error('Failed to fetch products');
                 }
 
-                const data = await response.json();
+                const responseText = await response.text();
+                const data = responseText ? JSON.parse(responseText) : [];
+                
                 setAll_Product(data);
                 setCartItems(getDefaultCart(data));
 
@@ -35,7 +37,8 @@ const ShopContextProvider = (props) => {
                         throw new Error('Failed to fetch cart');
                     }
 
-                    const cartData = await cartResponse.json();
+                    const cartResponseText = await cartResponse.text();
+                    const cartData = cartResponseText ? JSON.parse(cartResponseText) : {};
                     setCartItems(cartData);
                 }
             } catch (error) {
@@ -130,7 +133,6 @@ const ShopContextProvider = (props) => {
         }
     };
     
-
     // Function to get total cart amount
     const getTotalCartAmount = () => {
         let totalAmount = 0;
