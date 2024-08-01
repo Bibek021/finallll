@@ -73,7 +73,7 @@ const CartItems = () => {
     }
   };
   const handlelogin = () => {
-    window.location.href='/login';
+    window.location.href('/loginsignup');
   };
   return (
     <div className="cartitems">

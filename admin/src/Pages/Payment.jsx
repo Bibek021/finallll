@@ -69,7 +69,7 @@ const Payment = () => {
                 <div key={payment.transactionUuid}>
                   <div className="payment-format-main payment-item-format">
                     <p>{payment.transactionUuid}</p>
-                    <p>${payment.amount}</p>
+                    <p>Rs {payment.amount}</p>
                     <p>{payment.userId}</p>
                   </div>
                   <hr />

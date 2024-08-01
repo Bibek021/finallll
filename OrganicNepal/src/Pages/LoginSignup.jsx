@@ -108,10 +108,10 @@ const LoginSignup = () => {
             {message === 'Sign Up' ? ' Login here' : ' Sign up here'}
           </span>
         </p>
-        <div className="loginsignup-agree">
+        {/* <div className="loginsignup-agree">
           <input type="checkbox" />
           <p>By continuing, I agree to the terms of use & privacy policy.</p>
-        </div>
+        </div> */}
       </div>
     </div>
   );

@@ -72,7 +72,7 @@ const Inventory = () => {
                   <div className="inventory-format-main inventory-item-format">
                     <img src={item.image} alt="" className="inventory-product-icon" />
                     <p>{item.name}</p>
-                    <p>${item.new_price}</p>
+                    <p>Rs {item.new_price}</p>
                     <p>{item.category}</p>
                     <p>{item.quantity}</p>
                   </div>

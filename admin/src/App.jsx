@@ -26,6 +26,7 @@ const App = () => {
     <Router>
       <Routes>
         <Route path="/adminlogin" element={<AdminLogin onLogin={handleLogin} />} />
+        <Route path="/" element={<AdminLogin onLogin={handleLogin} />} />
         <Route
           path="/addproduct"
           element={isAuthenticated ? <AddProduct /> : <Navigate to="/adminlogin" />}
